@@ -1,0 +1,6 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "make": true
+    },
+    "git.ignoreLimitWarning": true
+}

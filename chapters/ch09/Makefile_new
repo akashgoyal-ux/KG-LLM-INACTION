@@ -1,0 +1,71 @@
+# ================================
+# Config
+# ================================
+PYTHON=python
+PIP=pip
+
+APIKEY=cb0d1628-bae7-4b8d-9d70-62d845d791cf
+
+# ================================
+# Download Data
+# ================================
+download:
+	mkdir -p /work/dataset/ontology/snomed/
+	mkdir -p /work/dataset/ontology/umls/
+
+	curl "https://uts-ws.nlm.nih.gov/download?url=https://download.nlm.nih.gov/mlb/utsauth/USExt/SnomedCT_USEditionRF2_PRODUCTION_20220901T120000Z.zip&apiKey=$(APIKEY)" \
+		-o /work/dataset/ontology/snomed/SnomedCT.zip
+
+	curl "https://uts-ws.nlm.nih.gov/download?url=https://download.nlm.nih.gov/umls/kss/2022AB/umls-2022AB-mrconso.zip&apiKey=$(APIKEY)" \
+		-o /work/dataset/ontology/umls/umls.zip
+
+	curl "https://lhncbc.nlm.nih.gov/semanticnetwork/download/SemGroups.txt" \
+		-o /work/dataset/ontology/umls/SemGroups.txt
+
+	unzip /work/dataset/ontology/snomed/SnomedCT.zip -d /work/dataset/ontology/snomed/
+	unzip /work/dataset/ontology/umls/umls.zip -d /work/dataset/ontology/umls/
+
+	mv /work/dataset/ontology/snomed/*/Full/Terminology/sct2_Relationship*.txt \
+		/work/dataset/ontology/snomed/sct2_Relationship.txt
+
+	mv /work/dataset/ontology/snomed/*/Full/Terminology/sct2_Description*.txt \
+		/work/dataset/ontology/snomed/sct2_Description.txt
+
+	mv /work/dataset/ontology/snomed/*/Full/Terminology/sct2_TextDefinition*.txt \
+		/work/dataset/ontology/snomed/sct2_TextDefinition.txt
+
+# ================================
+# Install Dependencies
+# ================================
+init:
+	cd /work/chapters/ch09 && $(PIP) install -r requirements.lock
+
+# ================================
+# Import Data into Neo4j
+# ================================
+import:
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/importer/import_snomed_rels.py
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/importer/import_snomed_names.py
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/importer/propagate_snomed_categories.py
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/importer/import_hpo.py
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/importer/import_umls_concept_mapping.py
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/importer/import_ocred_documents.py
+
+# ================================
+# Disambiguation Pipeline
+# ================================
+disambiguate:
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/disambiguation/disambiguator.py
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/disambiguation/ontology_linking.py
+	cd /work && PYTHONPATH=/work $(PYTHON) chapters/ch09/disambiguation/co_occurrence_generator.py
+
+# ================================
+# Debug Helpers
+# ================================
+check:
+	ls /work
+	ls /work/chapters/ch09
+	echo "PYTHONPATH=" $$PYTHONPATH
+
+shell:
+	bash

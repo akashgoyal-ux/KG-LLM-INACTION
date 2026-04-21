@@ -1,0 +1,155 @@
+{
+  "_comment": "Golden entities/events for Apple Q3 FY2024 earnings call. Identifiers are verified public records from GLEIF (lei), OpenFIGI (figi), SEC EDGAR (cik/isin), ISO registries.",
+  "issuer": {
+    "name": "Apple Inc.",
+    "lei": "54930084UKLVMY22DS16",
+    "figi": "BBG000B9XRY4",
+    "isin": "US0378331005",
+    "cusip": "037833100",
+    "cik": "0000320193",
+    "ticker": "AAPL",
+    "exchange_mic": "XNAS",
+    "fibo_class": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/Corporation",
+    "cfi_code": "ESVUFR",
+    "jurisdiction": "US"
+  },
+  "entities": [
+    {
+      "text": "Apple Inc.",
+      "label": "ORG",
+      "normalized": "Apple Inc.",
+      "lei": "54930084UKLVMY22DS16",
+      "fibo_class": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/Corporation"
+    },
+    {
+      "text": "AAPL",
+      "label": "TICKER",
+      "normalized": "AAPL",
+      "figi": "BBG000B9XRY4",
+      "isin": "US0378331005",
+      "exchange_mic": "XNAS"
+    },
+    {
+      "text": "Tim Cook",
+      "label": "PERSON",
+      "normalized": "Timothy D. Cook",
+      "role": "Chief Executive Officer"
+    },
+    {
+      "text": "$94.9 billion",
+      "label": "METRIC",
+      "normalized": "94900000000",
+      "unit": "USD",
+      "concept": "us-gaap:Revenues"
+    },
+    {
+      "text": "$24.2 billion",
+      "label": "METRIC",
+      "normalized": "24200000000",
+      "unit": "USD",
+      "concept": "us-gaap:Revenues",
+      "segment": "Services"
+    },
+    {
+      "text": "$46.0 billion",
+      "label": "METRIC",
+      "normalized": "46000000000",
+      "unit": "USD",
+      "concept": "us-gaap:Revenues",
+      "segment": "iPhone"
+    },
+    {
+      "text": "46.3%",
+      "label": "METRIC",
+      "normalized": "0.463",
+      "unit": "ratio",
+      "concept": "us-gaap:GrossProfit"
+    },
+    {
+      "text": "$21.4 billion",
+      "label": "METRIC",
+      "normalized": "21400000000",
+      "unit": "USD",
+      "concept": "us-gaap:NetIncomeLoss"
+    },
+    {
+      "text": "$1.40",
+      "label": "METRIC",
+      "normalized": "1.40",
+      "unit": "USD",
+      "concept": "us-gaap:EarningsPerShareDiluted"
+    },
+    {
+      "text": "$110 billion",
+      "label": "METRIC",
+      "normalized": "110000000000",
+      "unit": "USD",
+      "concept": "us-gaap:StockRepurchaseProgramAuthorizedAmount1"
+    },
+    {
+      "text": "India",
+      "label": "LOCATION",
+      "normalized": "IN",
+      "iso_3166": "IN"
+    },
+    {
+      "text": "European Union",
+      "label": "ORG",
+      "normalized": "European Union",
+      "lei": null
+    },
+    {
+      "text": "Japanese yen",
+      "label": "CURRENCY",
+      "normalized": "JPY",
+      "iso_4217": "JPY"
+    },
+    {
+      "text": "euro",
+      "label": "CURRENCY",
+      "normalized": "EUR",
+      "iso_4217": "EUR"
+    },
+    {
+      "text": "US dollar",
+      "label": "CURRENCY",
+      "normalized": "USD",
+      "iso_4217": "USD"
+    }
+  ],
+  "events": [
+    {
+      "event_type": "EARNINGS_RELEASE",
+      "description": "Apple reported Q3 FY2024 revenue of $94.9 billion, up 5% year-over-year",
+      "entities_involved": ["Apple Inc.", "AAPL"],
+      "sentiment": "POSITIVE",
+      "occurred_at": "2024-08-01",
+      "confidence": 1.0,
+      "source_document": "Apple Inc. Q3 FY2024 Earnings Call Transcript, 1 August 2024"
+    },
+    {
+      "event_type": "GUIDANCE_REVISION",
+      "description": "Apple guided Q4 FY2024 revenue in the range of $94-$98 billion",
+      "entities_involved": ["Apple Inc.", "AAPL"],
+      "sentiment": "POSITIVE",
+      "occurred_at": "2024-08-01",
+      "confidence": 1.0
+    },
+    {
+      "event_type": "SHARE_BUYBACK",
+      "description": "Apple Board approved an additional $110 billion share repurchase programme",
+      "entities_involved": ["Apple Inc.", "AAPL"],
+      "sentiment": "POSITIVE",
+      "occurred_at": "2024-05-02",
+      "confidence": 1.0
+    },
+    {
+      "event_type": "REGULATORY_ACTION",
+      "description": "Apple faces ongoing EU Digital Markets Act regulatory proceedings",
+      "entities_involved": ["Apple Inc.", "European Union"],
+      "sentiment": "NEGATIVE",
+      "occurred_at": null,
+      "confidence": 0.95
+    }
+  ]
+}

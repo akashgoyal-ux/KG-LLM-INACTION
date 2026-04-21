@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FinancialEntityExtractionResult",
+  "description": "Structured output from LLM-based named entity extraction on a financial text",
+  "type": "object",
+  "required": ["entities"],
+  "additionalProperties": false,
+  "properties": {
+    "entities": {
+      "type": "array",
+      "description": "List of financial entities found in the text",
+      "items": {
+        "type": "object",
+        "required": ["text", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Exact surface form as it appears in the source text"
+          },
+          "label": {
+            "type": "string",
+            "enum": ["ORG", "PERSON", "TICKER", "ISIN", "EXCHANGE", "CURRENCY", "METRIC", "LOCATION"],
+            "description": "Entity type"
+          },
+          "normalized": {
+            "type": "string",
+            "description": "Canonical form (e.g. full legal name, ISO code)"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Extraction confidence [0, 1]"
+          },
+          "context": {
+            "type": "string",
+            "description": "Short snippet of surrounding text for disambiguation"
+          }
+        }
+      }
+    },
+    "source_excerpt": {
+      "type": "string",
+      "description": "The input text that was processed"
+    },
+    "model": {
+      "type": "string",
+      "description": "Model that produced this extraction"
+    }
+  }
+}

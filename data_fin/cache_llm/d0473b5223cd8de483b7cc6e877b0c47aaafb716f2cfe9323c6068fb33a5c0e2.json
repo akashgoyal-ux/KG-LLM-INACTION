@@ -1,0 +1,59 @@
+{
+  "events": [
+    {
+      "event_type": "EARNINGS_REPORT",
+      "description": "Apple Inc. reported Q3 2024 revenue of $94.9 billion, up 5% year-over-year",
+      "entities_involved": [
+        "Apple Inc.",
+        "AAPL"
+      ],
+      "sentiment": "POSITIVE",
+      "occurred_at": null,
+      "confidence": 0.98
+    },
+    {
+      "event_type": "EARNINGS_REPORT",
+      "description": "Apple Inc. reported Services revenue reached all-time high of $24.2 billion",
+      "entities_involved": [
+        "Apple Inc.",
+        "AAPL"
+      ],
+      "sentiment": "POSITIVE",
+      "occurred_at": null,
+      "confidence": 0.97
+    },
+    {
+      "event_type": "EARNINGS_REPORT",
+      "description": "Apple Inc. reported iPhone revenue of $46.0 billion for Q3 2024",
+      "entities_involved": [
+        "Apple Inc.",
+        "AAPL"
+      ],
+      "sentiment": "POSITIVE",
+      "occurred_at": null,
+      "confidence": 0.96
+    },
+    {
+      "event_type": "EARNINGS_REPORT",
+      "description": "Apple Inc. reported gross margin of 46.3% for Q3 2024",
+      "entities_involved": [
+        "Apple Inc.",
+        "AAPL"
+      ],
+      "sentiment": "POSITIVE",
+      "occurred_at": null,
+      "confidence": 0.95
+    },
+    {
+      "event_type": "EARNINGS_REPORT",
+      "description": "Apple Inc. reported net income of $21.4 billion and EPS of $1.40, ahead of consensus estimates",
+      "entities_involved": [
+        "Apple Inc.",
+        "AAPL"
+      ],
+      "sentiment": "POSITIVE",
+      "occurred_at": null,
+      "confidence": 0.99
+    }
+  ]
+}

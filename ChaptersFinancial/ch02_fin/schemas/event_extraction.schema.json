@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FinancialEventExtractionResult",
+  "description": "Structured output from LLM-based financial event extraction",
+  "type": "object",
+  "required": ["events"],
+  "additionalProperties": false,
+  "properties": {
+    "events": {
+      "type": "array",
+      "description": "Financial events detected in the text",
+      "items": {
+        "type": "object",
+        "required": ["event_type", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "EARNINGS_RELEASE",
+              "GUIDANCE_REVISION",
+              "RATING_CHANGE",
+              "MA_ANNOUNCEMENT",
+              "LEADERSHIP_CHANGE",
+              "DIVIDEND_ANNOUNCEMENT",
+              "SHARE_BUYBACK",
+              "REGULATORY_ACTION",
+              "SANCTIONS",
+              "BANKRUPTCY",
+              "IPO",
+              "DEBT_ISSUANCE",
+              "OTHER"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "One-sentence description of the event"
+          },
+          "entities_involved": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Names/tickers of entities directly involved"
+          },
+          "sentiment": {
+            "type": "string",
+            "enum": ["POSITIVE", "NEGATIVE", "NEUTRAL", "MIXED"],
+            "description": "Market sentiment implied by the event"
+          },
+          "occurred_at": {
+            "type": ["string", "null"],
+            "description": "ISO-8601 date/time if determinable from text, else null"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        }
+      }
+    },
+    "source_excerpt": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    }
+  }
+}

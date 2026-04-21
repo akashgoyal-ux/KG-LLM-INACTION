@@ -1,0 +1,74 @@
+[
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/Corporation",
+    "label": "Corporation",
+    "source": "FIBO-BE",
+    "description": "A legal entity that is incorporated under law, owned by shareholders, and has a legal personality separate from its owners"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/CorporateBodies/PubliclyHeldCompany",
+    "label": "PubliclyHeldCompany",
+    "source": "FIBO-BE",
+    "description": "A corporation whose shares are listed and traded on a public stock exchange"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/FinancialInstitution",
+    "label": "FinancialInstitution",
+    "source": "FIBO-FBC",
+    "description": "An organization that provides financial services, including banks, insurers, and investment managers"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/Bank",
+    "label": "Bank",
+    "source": "FIBO-FBC",
+    "description": "A financial institution licensed to receive deposits and make loans"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/SEC/Equities/EquityInstruments/Share",
+    "label": "Share",
+    "source": "FIBO-SEC",
+    "description": "A unit of ownership in a corporation that entitles the holder to a proportion of profits and assets"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/SEC/Equities/EquityInstruments/ListedShare",
+    "label": "ListedShare",
+    "source": "FIBO-SEC",
+    "description": "A share that is admitted to trading on a regulated stock exchange"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/SEC/Debt/Bonds/Bond",
+    "label": "Bond",
+    "source": "FIBO-SEC",
+    "description": "A debt security issued by a corporation, government, or other entity to raise capital"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/IND/MarketIndices/BasketIndices/MarketCapitalisationWeightedIndex",
+    "label": "MarketCapWeightedIndex",
+    "source": "FIBO-IND",
+    "description": "An index in which each component is weighted by its market capitalisation (e.g. S&P 500)"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/RegulatoryAgencies/RegulatoryAgency",
+    "label": "RegulatoryAgency",
+    "source": "FIBO-FBC",
+    "description": "A government body responsible for supervising a particular industry or market (e.g. SEC, FCA, ECB)"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/BE/Trusts/Trusts/TrustInstrument",
+    "label": "TrustInstrument",
+    "source": "FIBO-BE",
+    "description": "A legal arrangement in which assets are held by a trustee for the benefit of beneficiaries"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/BusinessCenters/ExchangeParty",
+    "label": "ExchangeParty",
+    "source": "FIBO-FBC",
+    "description": "An organisation that operates a market for trading of financial instruments"
+  },
+  {
+    "iri": "https://spec.edmcouncil.org/fibo/ontology/FBC/FinancialInstruments/FinancialInstruments/FinancialInstrument",
+    "label": "FinancialInstrument",
+    "source": "FIBO-FBC",
+    "description": "A contract that creates a financial asset for one party and a financial liability or equity for another"
+  }
+]

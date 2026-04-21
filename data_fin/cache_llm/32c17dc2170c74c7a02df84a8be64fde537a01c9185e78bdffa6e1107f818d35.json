@@ -1,0 +1,58 @@
+{
+  "entities": [
+    {
+      "text": "Apple Inc.",
+      "label": "ORG",
+      "normalized": "Apple Inc.",
+      "confidence": 0.99
+    },
+    {
+      "text": "AAPL",
+      "label": "TICKER",
+      "normalized": "AAPL",
+      "confidence": 0.99
+    },
+    {
+      "text": "Tim Cook",
+      "label": "PERSON",
+      "normalized": "Tim Cook",
+      "confidence": 0.99
+    },
+    {
+      "text": "$94.9 billion",
+      "label": "CURRENCY",
+      "normalized": "USD 94900000000",
+      "confidence": 0.95
+    },
+    {
+      "text": "$24.2 billion",
+      "label": "CURRENCY",
+      "normalized": "USD 24200000000",
+      "confidence": 0.95
+    },
+    {
+      "text": "$46.0 billion",
+      "label": "CURRENCY",
+      "normalized": "USD 46000000000",
+      "confidence": 0.95
+    },
+    {
+      "text": "46.3%",
+      "label": "METRIC",
+      "normalized": "46.3%",
+      "confidence": 0.9
+    },
+    {
+      "text": "$21.4 billion",
+      "label": "CURRENCY",
+      "normalized": "USD 21400000000",
+      "confidence": 0.95
+    },
+    {
+      "text": "$1.40",
+      "label": "CURRENCY",
+      "normalized": "USD 1.40",
+      "confidence": 0.95
+    }
+  ]
+}

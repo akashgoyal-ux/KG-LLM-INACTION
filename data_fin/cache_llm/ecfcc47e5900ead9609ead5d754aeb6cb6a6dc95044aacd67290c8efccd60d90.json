@@ -1,0 +1,62 @@
+{
+  "filing_type": "10-Q",
+  "period": "2024-Q3",
+  "issuer": {
+    "name": "TechCorp Inc.",
+    "ticker": "TCRP",
+    "cik": "0001234567"
+  },
+  "key_facts": [
+    {
+      "fact": "Revenue for quarter ended September 30, 2024",
+      "category": "Financial Performance",
+      "numeric_value": 1.24,
+      "unit": "billion USD"
+    },
+    {
+      "fact": "Revenue for prior-year quarter",
+      "category": "Financial Performance",
+      "numeric_value": 1.18,
+      "unit": "billion USD"
+    },
+    {
+      "fact": "Revenue growth rate",
+      "category": "Financial Performance",
+      "numeric_value": 5.1,
+      "unit": "percent"
+    },
+    {
+      "fact": "Operating income",
+      "category": "Financial Performance",
+      "numeric_value": 312,
+      "unit": "million USD"
+    },
+    {
+      "fact": "Operating margin",
+      "category": "Financial Performance",
+      "numeric_value": 25.2,
+      "unit": "percent"
+    },
+    {
+      "fact": "Earnings per diluted share",
+      "category": "Financial Performance",
+      "numeric_value": 0.87,
+      "unit": "USD"
+    },
+    {
+      "fact": "Earnings per diluted share prior-year",
+      "category": "Financial Performance",
+      "numeric_value": 0.79,
+      "unit": "USD"
+    }
+  ],
+  "risks": [
+    "The Company is subject to significant competition in cloud services.",
+    "Foreign exchange fluctuations could materially impact results.",
+    "Ongoing litigation with Vendor Corp may result in material losses."
+  ],
+  "forward_looking_statements": [
+    "Management expects revenue for fiscal year 2025 to be in the range of $5.0 billion to $5.3 billion, representing growth of 8\u201314% over fiscal 2024."
+  ],
+  "compliance_flags": []
+}

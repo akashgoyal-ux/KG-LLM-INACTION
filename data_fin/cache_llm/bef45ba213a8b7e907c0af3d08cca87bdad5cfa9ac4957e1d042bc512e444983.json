@@ -1,0 +1,24 @@
+{
+  "entities": [
+    {
+      "text": "Berkshire Hathaway",
+      "label": "ORG",
+      "confidence": 0.95
+    },
+    {
+      "text": "BRK.A",
+      "label": "TICKER",
+      "confidence": 0.98
+    },
+    {
+      "text": "$11.2 billion",
+      "label": "MONEY",
+      "confidence": 0.99
+    },
+    {
+      "text": "Q2 2024",
+      "label": "DATE",
+      "confidence": 0.97
+    }
+  ]
+}

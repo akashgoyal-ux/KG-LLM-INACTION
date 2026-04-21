@@ -1,0 +1,156 @@
+# Canonical Financial Knowledge Graph Schema
+# Used by: FinImporterBase.ensure_constraints(), ch17_fin schema tool, eval harness
+
+nodes:
+  LegalEntity:
+    key: lei
+    description: "A legal entity identified by its LEI (Legal Entity Identifier)"
+    properties:
+      lei:               { type: string, required: true, description: "GLEIF LEI (20-char alphanumeric)" }
+      name:              { type: string, required: true, description: "Official registered name" }
+      legalForm:         { type: string, description: "e.g. CORP, LLC, FUND, BANK" }
+      jurisdiction:      { type: string, description: "ISO 3166-1 alpha-2 country code" }
+      status:            { type: string, description: "ACTIVE | INACTIVE | ANNULLED" }
+      registeredAddress: { type: string, description: "Registered office address" }
+      cik:               { type: string, description: "SEC CIK for US filers" }
+      aliases:           { type: list, description: "Known alternative names / tickers" }
+      communityLouvain:  { type: integer, description: "Louvain community ID (ch04_fin)" }
+      pagerank:          { type: float,   description: "PageRank score (ch04_fin)" }
+      runId:             { type: string }
+      ingestedAt:        { type: string, description: "ISO-8601 UTC timestamp" }
+
+  Instrument:
+    key: figi
+    description: "A tradable financial instrument"
+    properties:
+      figi:      { type: string, required: true, description: "FIGI identifier" }
+      isin:      { type: string, description: "ISO 6166 ISIN" }
+      cusip:     { type: string, description: "CUSIP (US/CA)" }
+      ticker:    { type: string, description: "Exchange ticker symbol" }
+      cfiCode:   { type: string, description: "ISO 10962 CFI (6-char)" }
+      assetClass: { type: string, description: "EQUITY | BOND | DERIVATIVE | ETF | ..." }
+      currency:  { type: string, description: "ISO 4217 currency code" }
+      issuerLei: { type: string, description: "LEI of the issuer" }
+      runId:     { type: string }
+      ingestedAt: { type: string }
+
+  Exchange:
+    key: mic
+    description: "A trading venue identified by its MIC (ISO 10383)"
+    properties:
+      mic:         { type: string, required: true }
+      name:        { type: string }
+      country:     { type: string, description: "ISO 3166-1 alpha-2" }
+      operatingMic: { type: string, description: "Operating MIC (parent venue)" }
+
+  Filing:
+    key: filingId
+    description: "A regulatory filing (10-K, 10-Q, 8-K, annual report, etc.)"
+    properties:
+      filingId:  { type: string, required: true }
+      formType:  { type: string, description: "e.g. 10-K, 10-Q, 8-K" }
+      filedAt:   { type: string }
+      periodEnd: { type: string }
+      cik:       { type: string }
+      sourceUrl: { type: string }
+
+  StatementItem:
+    key: [filingId, concept, period]
+    description: "A single numeric fact from a financial statement (XBRL concept)"
+    properties:
+      filingId:    { type: string }
+      concept:     { type: string, description: "XBRL concept e.g. us-gaap:Revenues" }
+      period:      { type: string }
+      value:       { type: float }
+      unit:        { type: string }
+      xbrlConcept: { type: string }
+
+  Document:
+    key: docId
+    description: "A source document (news article, filing text, transcript, report)"
+    properties:
+      docId:      { type: string, required: true }
+      type:       { type: string, description: "NEWS | FILING | TRANSCRIPT | REPORT" }
+      publishedAt: { type: string }
+      source:     { type: string, description: "Publisher / feed name" }
+      title:      { type: string }
+      lang:       { type: string, description: "BCP-47 language tag e.g. en" }
+      hash:       { type: string, description: "SHA-256 of raw text" }
+
+  Chunk:
+    key: chunkId
+    description: "A text chunk of a Document; carries the vector embedding"
+    properties:
+      chunkId:  { type: string, required: true }
+      docId:    { type: string }
+      ord:      { type: integer, description: "Chunk sequence number within document" }
+      text:     { type: string }
+      embedding: { type: list,   description: "Dense float vector (ch15_fin)" }
+
+  Mention:
+    key: mentionId
+    description: "A span of text referring to a financial entity"
+    properties:
+      mentionId: { type: string, required: true }
+      text:      { type: string }
+      start:     { type: integer }
+      end:       { type: integer }
+      chunkId:   { type: string }
+      score:     { type: float,  description: "NER confidence" }
+      extractor: { type: string, description: "Model / rule that produced this mention" }
+
+  Event:
+    key: eventId
+    description: "A market or corporate event (downgrade, M&A, sanction, earnings)"
+    properties:
+      eventId:    { type: string, required: true }
+      type:       { type: string, description: "DOWNGRADE | UPGRADE | MA | EARNINGS | SANCTION | ..." }
+      occurredAt: { type: string }
+      confidence: { type: float }
+      source:     { type: string }
+
+  Transaction:
+    key: txId
+    description: "A financial transaction between two counterparties"
+    properties:
+      txId:      { type: string, required: true }
+      amount:    { type: float }
+      currency:  { type: string }
+      valueDate: { type: string }
+      direction: { type: string, description: "BUY | SELL | TRANSFER | PAYMENT" }
+
+  OntologyClass:
+    key: iri
+    description: "A class from FIBO, CFI, or another financial ontology"
+    properties:
+      iri:    { type: string, required: true, description: "Full IRI of the class" }
+      label:  { type: string }
+      source: { type: string, description: "FIBO | CFI | ISO4217 | NAICS | GICS" }
+
+  Run:
+    key: runId
+    description: "Observability node recording an import or analysis job"
+    properties:
+      runId:     { type: string, required: true }
+      chapter:   { type: string }
+      module:    { type: string }
+      startedAt: { type: string }
+      endedAt:   { type: string }
+      status:    { type: string, description: "RUNNING | COMPLETED | FAILED" }
+      metrics:   { type: string, description: "JSON blob of job metrics" }
+
+relationships:
+  ISSUES:         { from: LegalEntity, to: Instrument }
+  LISTED_ON:      { from: Instrument,  to: Exchange }
+  PARENT_OF:      { from: LegalEntity, to: LegalEntity, properties: { asOf: string } }
+  OWNS:           { from: LegalEntity, to: LegalEntity, properties: { pct: float, asOf: string, source: string } }
+  CONTROLS:       { from: LegalEntity, to: LegalEntity, properties: { basis: string, asOf: string } }
+  REPORTS_ON:     { from: Filing,      to: LegalEntity }
+  FROM_FILING:    { from: StatementItem, to: Filing }
+  OF_DOC:         { from: Chunk,       to: Document }
+  IN_CHUNK:       { from: Mention,     to: Chunk }
+  MENTIONS:       { from: Document,    to: LegalEntity }
+  RESOLVED_TO:    { from: Mention,     to: LegalEntity,   properties: { confidence: float, linker: string } }
+  AFFECTS:        { from: Event,       to: LegalEntity }
+  CLASSIFIED_AS:  { from: LegalEntity, to: OntologyClass }
+  EXPOSED_TO:     { from: LegalEntity, to: LegalEntity,   properties: { amount: float, currency: string, asOf: string } }

@@ -1,0 +1,40 @@
+{
+  "entities": [
+    {
+      "text": "Goldman Sachs",
+      "label": "ORG",
+      "normalized": "Goldman Sachs",
+      "confidence": 0.98
+    },
+    {
+      "text": "GS",
+      "label": "TICKER",
+      "normalized": "GS",
+      "confidence": 0.99
+    },
+    {
+      "text": "NVIDIA Corporation",
+      "label": "ORG",
+      "normalized": "NVIDIA Corporation",
+      "confidence": 0.98
+    },
+    {
+      "text": "NVDA",
+      "label": "TICKER",
+      "normalized": "NVDA",
+      "confidence": 0.99
+    },
+    {
+      "text": "$105",
+      "label": "CURRENCY",
+      "normalized": "105 USD",
+      "confidence": 0.95
+    },
+    {
+      "text": "$135",
+      "label": "CURRENCY",
+      "normalized": "135 USD",
+      "confidence": 0.95
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+call apoc.periodic.truncate({dropSchema:true})

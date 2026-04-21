@@ -1,0 +1,28 @@
+{
+  "entities": [
+    {
+      "text": "Goldman Sachs",
+      "label": "ORG",
+      "normalized": "Goldman Sachs",
+      "confidence": 1.0
+    },
+    {
+      "text": "GS",
+      "label": "TICKER",
+      "normalized": "GS",
+      "confidence": 1.0
+    },
+    {
+      "text": "NVIDIA",
+      "label": "ORG",
+      "normalized": "NVIDIA",
+      "confidence": 1.0
+    },
+    {
+      "text": "NVDA",
+      "label": "TICKER",
+      "normalized": "NVDA",
+      "confidence": 1.0
+    }
+  ]
+}
