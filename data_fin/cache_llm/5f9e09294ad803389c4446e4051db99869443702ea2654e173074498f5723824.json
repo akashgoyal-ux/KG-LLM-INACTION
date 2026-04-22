@@ -1,0 +1,44 @@
+{
+  "entities": [
+    {
+      "name": "Apple Inc.",
+      "type": "ORG",
+      "confidence": 0.99
+    },
+    {
+      "name": "Q3 2024",
+      "type": "INSTRUMENT",
+      "confidence": 0.95
+    },
+    {
+      "name": "$85.8 billion",
+      "type": "INSTRUMENT",
+      "confidence": 0.98
+    },
+    {
+      "name": "Tim Cook",
+      "type": "PERSON",
+      "confidence": 0.99
+    },
+    {
+      "name": "iPhone",
+      "type": "INSTRUMENT",
+      "confidence": 0.9
+    },
+    {
+      "name": "Services segment",
+      "type": "INSTRUMENT",
+      "confidence": 0.85
+    },
+    {
+      "name": "$110 billion",
+      "type": "INSTRUMENT",
+      "confidence": 0.98
+    },
+    {
+      "name": "share buyback program",
+      "type": "INSTRUMENT",
+      "confidence": 0.9
+    }
+  ]
+}

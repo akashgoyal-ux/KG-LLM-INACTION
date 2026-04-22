@@ -560,9 +560,23 @@ class LLMProvider:
         base_url = os.getenv("OLLAMA_BASE_URL") or self._cfg.get("ollama", {}).get(
             "base_url", "http://localhost:11434"
         )
-        mdl = model or os.getenv("OLLAMA_MODEL") or self._cfg.get("ollama", {}).get(
-            "model", "llama3.1:latest"
+        # Prefer a dedicated embedding model; fall back to the chat model
+        mdl = (
+            model
+            or os.getenv("OLLAMA_EMBED_MODEL")
+            or self._cfg.get("ollama", {}).get("embed_model")
+            or "nomic-embed-text"
         )
+        # Ollama ≥0.2 uses /api/embed with {"input": ...} → {"embeddings": [[...]]}
+        resp = httpx.post(
+            f"{base_url}/api/embed",
+            json={"model": mdl, "input": texts},
+            timeout=120,
+        )
+        if resp.is_success:
+            data = resp.json()
+            return data.get("embeddings", [])
+        # Fallback: try legacy /api/embeddings (one text at a time)
         results = []
         for text in texts:
             resp = httpx.post(
