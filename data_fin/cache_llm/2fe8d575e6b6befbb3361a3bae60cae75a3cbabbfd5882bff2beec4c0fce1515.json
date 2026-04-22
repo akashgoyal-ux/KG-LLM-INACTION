@@ -1,0 +1,26 @@
+{
+  "entities": [
+    {
+      "name": "Federal Reserve Board",
+      "type": "Regulatory Body"
+    },
+    {
+      "name": "U.S. banks",
+      "type": "Financial Institution"
+    },
+    {
+      "name": "credit unions",
+      "type": "Financial Institution"
+    },
+    {
+      "name": "FedNow Service",
+      "type": "Payment System"
+    }
+  ],
+  "events": [
+    {
+      "type": "Proposal",
+      "description": "The Federal Reserve Board proposed allowing U.S. banks and credit unions to use intermediaries for fund transfers through the FedNow Service and is seeking public comment."
+    }
+  ]
+}

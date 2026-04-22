@@ -1,0 +1,29 @@
+{
+  "entities": [
+    {
+      "name": "Apple Inc.",
+      "type": "ORG",
+      "confidence": 0.95
+    },
+    {
+      "name": "$85.8 billion",
+      "type": "INSTRUMENT",
+      "confidence": 0.9
+    },
+    {
+      "name": "5%",
+      "type": "INSTRUMENT",
+      "confidence": 0.85
+    },
+    {
+      "name": "Tim Cook",
+      "type": "PERSON",
+      "confidence": 0.9
+    },
+    {
+      "name": "$110 billion",
+      "type": "INSTRUMENT",
+      "confidence": 0.9
+    }
+  ]
+}

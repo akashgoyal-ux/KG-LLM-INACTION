@@ -49,6 +49,13 @@ class GraphDBBase:
                              if key not in ignored_params])
         # print(other_params)
 
+        # URI schemes neo4j+s:// / bolt+s:// already handle TLS; the 'encrypted'
+        # kwarg must not be passed with those schemes (raises ConfigurationError).
+        tls_in_scheme = any(uri.startswith(p) for p in
+                            ("neo4j+s://", "neo4j+ssc://", "bolt+s://", "bolt+ssc://"))
+        if tls_in_scheme:
+            other_params.pop("encrypted", None)
+
         self._driver = GraphDatabase.driver(uri, auth=(user, password), **other_params)
         self._session = None
 

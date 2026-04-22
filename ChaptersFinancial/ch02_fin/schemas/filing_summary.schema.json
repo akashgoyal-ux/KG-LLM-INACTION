@@ -3,12 +3,26 @@
   "title": "FilingSummaryResult",
   "description": "Structured summary extracted from a regulatory filing (10-K / 10-Q / 8-K)",
   "type": "object",
-  "required": ["filing_type", "period", "issuer", "key_facts"],
-  "additionalProperties": false,
+  "required": [
+    "filing_type",
+    "period",
+    "issuer",
+    "key_facts"
+  ],
+  "additionalProperties": true,
   "properties": {
     "filing_type": {
       "type": "string",
-      "enum": ["10-K", "10-Q", "8-K", "20-F", "6-K", "S-1", "DEF 14A", "OTHER"]
+      "enum": [
+        "10-K",
+        "10-Q",
+        "8-K",
+        "20-F",
+        "6-K",
+        "S-1",
+        "DEF 14A",
+        "OTHER"
+      ]
     },
     "period": {
       "type": "string",
@@ -16,13 +30,23 @@
     },
     "issuer": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "ticker": {"type": "string"},
-        "cik": {"type": "string"},
-        "lei": {"type": "string"}
+        "name": {
+          "type": "string"
+        },
+        "ticker": {
+          "type": "string"
+        },
+        "cik": {
+          "type": "string"
+        },
+        "lei": {
+          "type": "string"
+        }
       }
     },
     "key_facts": {
@@ -31,34 +55,59 @@
       "maxItems": 10,
       "items": {
         "type": "object",
-        "required": ["fact"],
+        "required": [
+          "fact"
+        ],
         "additionalProperties": false,
         "properties": {
-          "fact": {"type": "string"},
+          "fact": {
+            "type": "string"
+          },
           "category": {
             "type": "string",
-            "enum": ["REVENUE", "EARNINGS", "GUIDANCE", "RISK", "STRATEGY", "LEGAL", "DIVIDEND", "OTHER"]
+            "enum": [
+              "REVENUE",
+              "EARNINGS",
+              "GUIDANCE",
+              "RISK",
+              "STRATEGY",
+              "LEGAL",
+              "DIVIDEND",
+              "OTHER"
+            ]
           },
-          "numeric_value": {"type": "number"},
-          "unit": {"type": "string"},
-          "page_reference": {"type": "string"}
+          "numeric_value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "page_reference": {
+            "type": "string"
+          }
         }
       }
     },
     "risks": {
       "type": "array",
       "description": "Material risk factors mentioned",
-      "items": {"type": "string"}
+      "items": {
+        "type": "string"
+      }
     },
     "forward_looking_statements": {
       "type": "array",
       "description": "Forward-looking statements flagged in the text",
-      "items": {"type": "string"}
+      "items": {
+        "type": "string"
+      }
     },
     "compliance_flags": {
       "type": "array",
       "description": "Any compliance concerns detected (e.g. going concern, restatement)",
-      "items": {"type": "string"}
+      "items": {
+        "type": "string"
+      }
     },
     "model": {
       "type": "string"

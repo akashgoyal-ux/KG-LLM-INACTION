@@ -75,11 +75,11 @@ class TestLLMProviderUnit:
     def test_cache_roundtrip(self, tmp_path):
         """Second call with identical prompt must return cached result."""
         from ChaptersFinancial._platform.providers.llm import LLMProvider
-        lp = LLMProvider(provider="ollama")
+        lp = LLMProvider(provider="mock")
         lp._cache_dir = tmp_path
-        # Manually seed cache so test is offline
+        # Manually seed cache so test is fully offline
         prompt = '{"seed": 1}'
-        key    = LLMProvider._cache_key(prompt, None, _OLLAMA_MODEL)
+        key    = LLMProvider._cache_key(prompt, None, lp._default_model())
         cached = {"entities": [], "_cached": True}
         (tmp_path / f"{key}.json").write_text(json.dumps(cached))
         result = lp.complete_json(prompt)

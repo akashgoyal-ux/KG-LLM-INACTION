@@ -34,7 +34,7 @@ class RunLogger:
         self.run_id = run_id or str(uuid.uuid4())
         self.chapter = chapter
         self.module = module
-        self.started_at = datetime.datetime.utcnow().isoformat()
+        self.started_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
         self.ended_at: str | None = None
         self.status = "RUNNING"
         self._metrics: dict = {}
@@ -52,7 +52,7 @@ class RunLogger:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
-        self.ended_at = datetime.datetime.utcnow().isoformat()
+        self.ended_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
         if exc_type is None:
             self.status = "COMPLETED"
         else:

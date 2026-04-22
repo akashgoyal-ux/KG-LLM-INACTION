@@ -52,9 +52,14 @@ class GraphProvider:
 
         try:
             from neo4j import GraphDatabase  # type: ignore
-            self._driver = GraphDatabase.driver(
-                uri, auth=(user, password), encrypted=bool(encrypted)
-            )
+            # URI schemes neo4j+s:// and bolt+s:// already imply TLS — passing
+            # the `encrypted` kwarg with those schemes raises ConfigurationError.
+            tls_in_scheme = any(uri.startswith(p) for p in
+                                ("neo4j+s://", "neo4j+ssc://", "bolt+s://", "bolt+ssc://"))
+            driver_kwargs: dict = {"auth": (user, password)}
+            if not tls_in_scheme:
+                driver_kwargs["encrypted"] = bool(encrypted)
+            self._driver = GraphDatabase.driver(uri, **driver_kwargs)
         except ImportError as exc:
             raise ImportError("pip install neo4j to use GraphProvider") from exc
 

@@ -3,16 +3,21 @@
   "title": "FinancialEntityExtractionResult",
   "description": "Structured output from LLM-based named entity extraction on a financial text",
   "type": "object",
-  "required": ["entities"],
-  "additionalProperties": false,
+  "required": [
+    "entities"
+  ],
+  "additionalProperties": true,
   "properties": {
     "entities": {
       "type": "array",
       "description": "List of financial entities found in the text",
       "items": {
         "type": "object",
-        "required": ["text", "label"],
-        "additionalProperties": false,
+        "required": [
+          "text",
+          "label"
+        ],
+        "additionalProperties": true,
         "properties": {
           "text": {
             "type": "string",
@@ -20,7 +25,16 @@
           },
           "label": {
             "type": "string",
-            "enum": ["ORG", "PERSON", "TICKER", "ISIN", "EXCHANGE", "CURRENCY", "METRIC", "LOCATION"],
+            "enum": [
+              "ORG",
+              "PERSON",
+              "TICKER",
+              "ISIN",
+              "EXCHANGE",
+              "CURRENCY",
+              "METRIC",
+              "LOCATION"
+            ],
             "description": "Entity type"
           },
           "normalized": {

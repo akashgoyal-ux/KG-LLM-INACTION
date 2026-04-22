@@ -1,0 +1,30 @@
+{
+  "entities": [
+    {
+      "name": "Federal Reserve Board",
+      "type": "Regulatory Agency"
+    },
+    {
+      "name": "Ally Bank",
+      "type": "Bank"
+    },
+    {
+      "name": "Regions Bank",
+      "type": "Bank"
+    },
+    {
+      "name": "former employee of Ally Bank",
+      "type": "Person"
+    },
+    {
+      "name": "former employee of Regions Bank",
+      "type": "Person"
+    }
+  ],
+  "events": [
+    {
+      "type": "Enforcement Action",
+      "description": "The Federal Reserve Board issued enforcement actions against a former employee of Ally Bank and a former employee of Regions Bank."
+    }
+  ]
+}

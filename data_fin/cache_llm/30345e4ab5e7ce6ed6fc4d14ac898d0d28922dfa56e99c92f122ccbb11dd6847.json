@@ -1,0 +1,26 @@
+{
+  "entities": [
+    {
+      "name": "Federal Reserve Board",
+      "type": "Regulatory Agency"
+    },
+    {
+      "name": "Office of the Comptroller of the Currency",
+      "type": "Regulatory Agency"
+    },
+    {
+      "name": "Morgan Stanley Bank, N.A.",
+      "type": "Bank"
+    },
+    {
+      "name": "Section 23A of the Federal Reserve Act",
+      "type": "Law"
+    }
+  ],
+  "events": [
+    {
+      "type": "Regulatory Approval",
+      "description": "The Federal Reserve Board and the Office of the Comptroller of the Currency jointly approved an exemption request by Morgan Stanley Bank, N.A. under Section 23A of the Federal Reserve Act."
+    }
+  ]
+}

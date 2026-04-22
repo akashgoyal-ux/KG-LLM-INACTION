@@ -1,0 +1,46 @@
+app:
+  title: "Financial Investigative Copilot"
+  version: "1.0.0"
+  description: "KG + LLM investigative tool for financial analysts"
+
+neo4j:
+  database: fin_core
+  read_only: true
+
+llm:
+  default_provider: ollama
+
+safety:
+  allowed_labels:
+    - LegalEntity
+    - Instrument
+    - Exchange
+    - Filing
+    - StatementItem
+    - Document
+    - Chunk
+    - Mention
+    - Event
+    - OntologyClass
+  allowed_relationships:
+    - ISSUES
+    - LISTED_ON
+    - PARENT_OF
+    - OWNS
+    - CONTROLS
+    - REPORTS_ON
+    - FROM_FILING
+    - OF_DOC
+    - IN_CHUNK
+    - MENTIONS
+    - RESOLVED_TO
+    - AFFECTS
+    - CLASSIFIED_AS
+    - EXPOSED_TO
+  forbidden_clauses:
+    - DELETE
+    - DETACH
+    - CREATE
+    - SET
+    - REMOVE
+    - DROP

@@ -29,6 +29,16 @@ llm:
     temperature: 0.0
     timeout: 600                    # seconds; 27B local model on CPU needs ~3-10 min for longer prompts
 
+  openrouter:
+    model: google/gemma-3-27b-it:free              # any model slug from openrouter.ai/models
+    base_url: https://openrouter.ai/api/v1
+    # api_key:    set via OPENROUTER_API_KEY
+    # site_url:   set via OPENROUTER_SITE_URL   (optional, for rankings)
+    # site_name:  set via OPENROUTER_SITE_NAME  (optional, for rankings)
+    temperature: 0.0
+    max_tokens: 4096
+    timeout: 120
+
   mock:
     # Returns static fixtures from data_fin/samples/mock_responses/
     fixture_dir: data_fin/samples/mock_responses

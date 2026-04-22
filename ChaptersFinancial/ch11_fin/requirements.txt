@@ -1,0 +1,7 @@
+neo4j~=4.4
+pyyaml~=6.0
+tqdm~=4.66
+python-dotenv~=1.0
+numpy~=1.26
+scikit-learn~=1.4
+pandas~=2.2

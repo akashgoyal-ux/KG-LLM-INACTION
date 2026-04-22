@@ -14,7 +14,7 @@ embed    = provider.embed(["text one", "text two"])
 
 Environment variables (take precedence over provider_config.yaml)
 ------------------------------------------------------------------
-LLM_PROVIDER          openai | azure | ollama | mock
+LLM_PROVIDER          openai | azure | ollama | openrouter | mock
 OPENAI_API_KEY
 OPENAI_MODEL
 AZURE_OPENAI_API_KEY
@@ -23,6 +23,10 @@ AZURE_OPENAI_DEPLOYMENT
 AZURE_OPENAI_API_VERSION
 OLLAMA_BASE_URL
 OLLAMA_MODEL
+OPENROUTER_API_KEY
+OPENROUTER_MODEL
+OPENROUTER_SITE_URL   (optional)
+OPENROUTER_SITE_NAME  (optional)
 """
 
 from __future__ import annotations
@@ -44,6 +48,36 @@ _THINK_TAG_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
 _JSON_EXTRACT_RE = re.compile(r"(\{.*\}|\[.*\])", re.DOTALL)
 
 _CONFIG_PATH = Path(__file__).parent.parent / "config" / "provider_config.yaml"
+
+
+def _build_mock_stub(schema: dict) -> dict:
+    """Build a minimal valid JSON stub that satisfies schema's required fields."""
+    _type_defaults: dict = {
+        "string": "",
+        "number": 0.0,
+        "integer": 0,
+        "boolean": False,
+        "array": [],
+        "object": {},
+        "null": None,
+    }
+    props = schema.get("properties", {})
+    required = schema.get("required", list(props.keys()))
+    stub: dict = {}
+    for key in required:
+        prop_def = props.get(key, {})
+        ptype = prop_def.get("type", "string")
+        if isinstance(ptype, list):
+            ptype = next((t for t in ptype if t != "null"), "string")
+        if ptype == "object":
+            stub[key] = _build_mock_stub(prop_def)
+        elif ptype == "array":
+            stub[key] = []
+        elif ptype == "string" and "enum" in prop_def:
+            stub[key] = prop_def["enum"][0]
+        else:
+            stub[key] = _type_defaults.get(ptype, "")
+    return stub
 
 
 def _load_config() -> dict:
@@ -120,7 +154,7 @@ class LLMProvider:
             try:
                 raw = self._call_chat(
                     prompt, system=system, temperature=temp, model=mdl,
-                    timeout=req_timeout,
+                    timeout=req_timeout, schema=schema,
                 )
                 parsed = self._parse_json(raw)
                 self._save_cache(cache_key, parsed)
@@ -156,6 +190,11 @@ class LLMProvider:
         if self._provider in ("openai", "azure"):
             return self._openai_embed(texts, model=model)
 
+        if self._provider == "openrouter":
+            # OpenRouter exposes an OpenAI-compatible embeddings endpoint;
+            # use requests (with ssl_verify=False support) instead of OpenAI SDK
+            return self._openrouter_embed(texts, model=model)
+
         if self._provider == "ollama":
             return self._ollama_embed(texts, model=model)
 
@@ -177,10 +216,10 @@ class LLMProvider:
     # ------------------------------------------------------------------
     def _call_chat(
         self, prompt: str, *, system: str, temperature: float, model: str,
-        timeout: float = 300,
+        timeout: float = 300, schema: dict | None = None,
     ) -> str:
         if self._provider == "mock":
-            return self._mock_response(prompt)
+            return self._mock_response(prompt, schema=schema)
         if self._provider == "openai":
             return self._openai_chat(prompt, system=system, temperature=temperature, model=model)
         if self._provider == "azure":
@@ -189,15 +228,20 @@ class LLMProvider:
             return self._ollama_chat(
                 prompt, system=system, temperature=temperature, model=model, timeout=timeout
             )
+        if self._provider == "openrouter":
+            return self._openrouter_chat(
+                prompt, system=system, temperature=temperature, model=model, timeout=timeout
+            )
         raise ValueError(f"Unknown provider: {self._provider}")
 
     def _default_model(self) -> str:
         # Only look up the env var that matches the active provider to avoid
         # cross-contamination (e.g. OPENAI_MODEL overriding an Ollama run).
         provider_env = {
-            "openai": "OPENAI_MODEL",
-            "azure":  "AZURE_OPENAI_DEPLOYMENT",
-            "ollama": "OLLAMA_MODEL",
+            "openai":      "OPENAI_MODEL",
+            "azure":       "AZURE_OPENAI_DEPLOYMENT",
+            "ollama":      "OLLAMA_MODEL",
+            "openrouter":  "OPENROUTER_MODEL",
         }
         env_model = os.getenv(provider_env.get(self._provider, ""))
         return (
@@ -235,12 +279,16 @@ class LLMProvider:
     def _openai_embed(self, texts: list[str], *, model: str | None) -> list[list[float]]:
         try:
             from openai import OpenAI  # type: ignore
+            import httpx as _httpx  # type: ignore
         except ImportError as exc:
             raise ImportError("pip install openai>=1.12 to use the openai provider") from exc
 
         api_key = os.getenv("OPENAI_API_KEY") or self._cfg.get("openai", {}).get("api_key")
         embed_model = model or "text-embedding-3-small"
-        client = OpenAI(api_key=api_key)
+        ssl_verify_raw = os.getenv("OPENROUTER_SSL_VERIFY", "true").strip().lower()
+        ssl_verify = ssl_verify_raw not in ("0", "false", "no")
+        http_client = _httpx.Client(verify=ssl_verify) if not ssl_verify else None
+        client = OpenAI(api_key=api_key, http_client=http_client)
         response = client.embeddings.create(input=texts, model=embed_model)
         return [item.embedding for item in response.data]
 
@@ -357,6 +405,152 @@ class LLMProvider:
             self._total_calls += 1
             return resp.json()["message"]["content"]
 
+    # ------------------------------------------------------------------
+    # Internal: OpenRouter
+    # ------------------------------------------------------------------
+    def _openrouter_chat(
+        self, prompt: str, *, system: str, temperature: float, model: str,
+        timeout: float = 120,
+    ) -> str:
+        try:
+            import requests  # type: ignore
+            import urllib3   # type: ignore
+        except ImportError as exc:
+            raise ImportError("pip install requests to use the openrouter provider") from exc
+
+        api_key = os.getenv("OPENROUTER_API_KEY") or self._cfg.get("openrouter", {}).get("api_key")
+        if not api_key:
+            raise ValueError("OPENROUTER_API_KEY is not set")
+
+        base_url = (
+            os.getenv("OPENROUTER_BASE_URL")
+            or self._cfg.get("openrouter", {}).get("base_url", "https://openrouter.ai/api/v1")
+        )
+        mdl = os.getenv("OPENROUTER_MODEL") or model
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+        site_url = os.getenv("OPENROUTER_SITE_URL") or self._cfg.get("openrouter", {}).get("site_url", "")
+        site_name = os.getenv("OPENROUTER_SITE_NAME") or self._cfg.get("openrouter", {}).get("site_name", "")
+        if site_url:
+            headers["HTTP-Referer"] = site_url
+        if site_name:
+            headers["X-Title"] = site_name
+
+        # Google AI Studio (gemma models) rejects the "system" role with
+        # "Developer instruction is not enabled". Merge system into user instead.
+        _is_google_model = mdl.startswith("google/") or "gemma" in mdl.lower()
+        if _is_google_model and system:
+            messages = [{"role": "user", "content": f"{system}\n\n{prompt}"}]
+        else:
+            messages = [
+                {"role": "system", "content": system},
+                {"role": "user",   "content": prompt},
+            ]
+
+        payload = {
+            "model": mdl,
+            "messages": messages,
+            "temperature": temperature,
+        }
+        # response_format=json_object is only supported by OpenAI-family models.
+        # Free / open-weight models (e.g. llama, mistral, gemma) return plain text;
+        # _parse_json handles JSON extraction from free-text responses.
+        if mdl.startswith(("openai/", "anthropic/")) and not mdl.endswith(":free"):
+            payload["response_format"] = {"type": "json_object"}
+
+        # Respect OPENROUTER_SSL_VERIFY env var (set to 'false' behind corporate proxies
+        # that inject a self-signed certificate into the TLS chain).
+        ssl_verify_raw = os.getenv("OPENROUTER_SSL_VERIFY", "true").strip().lower()
+        ssl_verify = ssl_verify_raw not in ("0", "false", "no")
+        if not ssl_verify:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+        session = requests.Session()
+        session.verify = ssl_verify
+
+        # Retry on 429 (free-tier rate limit) with exponential back-off.
+        # Free models on OpenRouter have a per-minute quota; start with 15 s.
+        max_retries = 5
+        base_wait = 15.0
+        for attempt in range(max_retries):
+            resp = session.post(
+                f"{base_url}/chat/completions",
+                headers=headers,
+                data=json.dumps(payload),
+                timeout=timeout,
+            )
+            if resp.status_code == 429:
+                wait = base_wait * (2 ** attempt)   # 15, 30, 60, 120, 240 s
+                retry_after = resp.headers.get("Retry-After") or resp.headers.get("X-Ratelimit-Reset-Requests")
+                if retry_after:
+                    try:
+                        wait = max(wait, float(retry_after))
+                    except ValueError:
+                        pass
+                try:
+                    err_body = resp.json()
+                except Exception:
+                    err_body = resp.text[:200]
+                if attempt < max_retries - 1:
+                    print(f"[OpenRouter] 429 rate-limited ({err_body}), waiting {wait:.0f}s (attempt {attempt+1}/{max_retries})…")
+                    time.sleep(wait)
+                    continue
+                raise RuntimeError(f"[OpenRouter] Rate limit exceeded after {max_retries} retries: {err_body}")
+            if not resp.ok:
+                try:
+                    err_body = resp.json()
+                except Exception:
+                    err_body = resp.text[:400]
+                raise RuntimeError(f"[OpenRouter] HTTP {resp.status_code}: {err_body}")
+            break
+
+        data = resp.json()
+
+        usage = data.get("usage", {})
+        self._total_prompt_tokens += usage.get("prompt_tokens", 0)
+        self._total_completion_tokens += usage.get("completion_tokens", 0)
+        self._total_calls += 1
+
+        return data["choices"][0]["message"]["content"] or ""
+
+    def _openrouter_embed(self, texts: list[str], *, model: str | None) -> list[list[float]]:
+        """Embeddings via OpenRouter using requests (supports ssl_verify=False)."""
+        try:
+            import requests  # type: ignore
+            import urllib3   # type: ignore
+        except ImportError as exc:
+            raise ImportError("pip install requests") from exc
+
+        api_key = os.getenv("OPENROUTER_API_KEY") or self._cfg.get("openrouter", {}).get("api_key")
+        base_url = (
+            os.getenv("OPENROUTER_BASE_URL")
+            or self._cfg.get("openrouter", {}).get("base_url", "https://openrouter.ai/api/v1")
+        )
+        embed_model = model or os.getenv("OPENROUTER_EMBED_MODEL") or "text-embedding-3-small"
+
+        ssl_verify_raw = os.getenv("OPENROUTER_SSL_VERIFY", "true").strip().lower()
+        ssl_verify = ssl_verify_raw not in ("0", "false", "no")
+        if not ssl_verify:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+        session = requests.Session()
+        session.verify = ssl_verify
+        resp = session.post(
+            f"{base_url}/embeddings",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"input": texts, "model": embed_model},
+            timeout=60,
+        )
+        if not resp.ok:
+            # Fall back to zero vectors if embedding endpoint unavailable
+            dim = int(self._cfg.get("openai", {}).get("embedding_dim", 1536))
+            return [[0.0] * dim for _ in texts]
+        data = resp.json()
+        return [item["embedding"] for item in data.get("data", [])]
+
     def _ollama_embed(self, texts: list[str], *, model: str | None) -> list[list[float]]:
         try:
             import httpx  # type: ignore
@@ -383,8 +577,12 @@ class LLMProvider:
     # ------------------------------------------------------------------
     # Internal: Mock
     # ------------------------------------------------------------------
-    def _mock_response(self, prompt: str) -> str:
+    def _mock_response(self, prompt: str, schema: dict | None = None) -> str:
         # Return a minimal valid JSON stub so tests don't need real API keys.
+        # When a schema is provided build the minimal required-field stub.
+        if schema:
+            return json.dumps(_build_mock_stub(schema))
+
         fixture_dir = Path(
             self._cfg.get("mock", {}).get("fixture_dir", "data_fin/samples/mock_responses")
         )

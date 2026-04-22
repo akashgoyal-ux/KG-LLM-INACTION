@@ -1,0 +1,18 @@
+{
+  "entities": [
+    {
+      "name": "Federal Reserve Board",
+      "type": "Regulatory Body"
+    },
+    {
+      "name": "Burke & Herbert Financial Services Corp.",
+      "type": "Corporation"
+    }
+  ],
+  "events": [
+    {
+      "type": "Approval",
+      "description": "The Federal Reserve Board approved an application by Burke & Herbert Financial Services Corp."
+    }
+  ]
+}

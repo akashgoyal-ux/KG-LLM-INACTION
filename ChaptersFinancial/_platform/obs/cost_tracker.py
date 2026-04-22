@@ -55,7 +55,7 @@ class CostTracker:
             "promptTokens": prompt_tokens,
             "completionTokens": completion_tokens,
             "costUsd": cost,
-            "ts": datetime.datetime.utcnow().isoformat(),
+            "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         })
         return cost
 

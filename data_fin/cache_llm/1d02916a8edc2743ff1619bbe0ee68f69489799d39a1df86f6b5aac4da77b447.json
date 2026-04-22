@@ -1,0 +1,30 @@
+{
+  "entities": [
+    {
+      "name": "Federal Reserve Board",
+      "type": "Regulatory Body"
+    },
+    {
+      "name": "Cr\u00e9dit Agricole S.A.",
+      "type": "Financial Institution"
+    },
+    {
+      "name": "Cr\u00e9dit Agricole Corporate and Investment Bank",
+      "type": "Financial Institution"
+    },
+    {
+      "name": "Mega International Commercial Bank Co., Ltd",
+      "type": "Financial Institution"
+    },
+    {
+      "name": "Goldman Sachs Group, Inc.",
+      "type": "Financial Institution"
+    }
+  ],
+  "events": [
+    {
+      "type": "Enforcement Action Termination",
+      "description": "The Federal Reserve Board terminated enforcement actions against Cr\u00e9dit Agricole S.A., Cr\u00e9dit Agricole Corporate and Investment Bank, Mega International Commercial Bank Co., Ltd, and Goldman Sachs Group, Inc."
+    }
+  ]
+}

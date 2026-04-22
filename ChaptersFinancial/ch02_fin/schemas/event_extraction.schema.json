@@ -3,17 +3,29 @@
   "title": "FinancialEventExtractionResult",
   "description": "Structured output from LLM-based financial event extraction",
   "type": "object",
-  "required": ["events"],
-  "additionalProperties": false,
+  "required": [
+    "events"
+  ],
+  "additionalProperties": true,
   "properties": {
     "events": {
       "type": "array",
       "description": "Financial events detected in the text",
       "items": {
         "type": "object",
-        "required": ["event_type", "description"],
-        "additionalProperties": false,
+        "required": [
+          "event_type",
+          "description"
+        ],
+        "additionalProperties": true,
         "properties": {
+          "source_document": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Citation or reference for the source of this event"
+          },
           "event_type": {
             "type": "string",
             "enum": [
@@ -38,16 +50,26 @@
           },
           "entities_involved": {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {
+              "type": "string"
+            },
             "description": "Names/tickers of entities directly involved"
           },
           "sentiment": {
             "type": "string",
-            "enum": ["POSITIVE", "NEGATIVE", "NEUTRAL", "MIXED"],
+            "enum": [
+              "POSITIVE",
+              "NEGATIVE",
+              "NEUTRAL",
+              "MIXED"
+            ],
             "description": "Market sentiment implied by the event"
           },
           "occurred_at": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "ISO-8601 date/time if determinable from text, else null"
           },
           "confidence": {
